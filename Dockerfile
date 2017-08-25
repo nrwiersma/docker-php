@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
@@ -31,7 +31,6 @@ RUN apk --no-cache add \
         php7-mbstring \
         php7-cgi \
         php7-pcntl && \
-    ln -s /usr/bin/php7 /usr/bin/php && \
     rm -rf \
         /var/cache/apk/* \
         /tmp/*
