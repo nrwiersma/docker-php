@@ -12,7 +12,11 @@ trap killAll SIGCHLD
 trap killAll SIGTERM
 
 # Start PHP-FPM
-/usr/sbin/php-fpm7 &
+/usr/sbin/php-fpm7 \
+	-d memory_limit=$PHP_MEMORY_LIMIT \
+	-d upload_max_filesize=$MAX_UPLOAD \
+	-d max_file_uploads=$PHP_MAX_FILE_UPLOADS \
+	-d post_max_size=$PHP_MAX_POST &
 
 # Start Nginx
 /usr/sbin/nginx -g "daemon off;" &
