@@ -3,13 +3,15 @@ FROM alpine:3.6
 MAINTAINER Nicholas Wiersma <nick@wiersma.co.za>
 
 # Set configuration defaults
-ENV PHP_MEMORY_LIMIT 512M
-ENV MAX_UPLOAD 50M
+ENV PHP_WORKERS 2
+ENV PHP_MEMORY_LIMIT 128M
 ENV PHP_MAX_FILE_UPLOADS 20
+ENV PHP_MAX_UPLOAD 50M
 ENV PHP_MAX_POST 50M
 
 # Install dependencies
 RUN apk --no-cache add \
+		bash \
         ca-certificates \
         git \
         curl \
@@ -35,25 +37,24 @@ RUN apk --no-cache add \
         /var/cache/apk/* \
         /tmp/*
 
-# Configure php fpm
-RUN sed -i "s|;*daemonize\s*=\s*yes|daemonize = no|g" /etc/php7/php-fpm.conf
-
 # Configure php
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php7/php.ini
+RUN sed -i 's/memory_limit.*/memory_limit = "${PHP_MEMORY_LIMIT}"/' /etc/php7/php.ini
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
-COPY files/nginx.conf /etc/nginx/nginx.conf
-COPY files/default.conf /etc/nginx/conf.d/default.conf
-COPY files/serve.sh /serve.sh
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
+COPY bin/serve /bin/serve
 
-RUN chmod a+x /serve.sh
+RUN chmod a+x /bin/serve
 RUN mkdir -p /var/run/nginx
 
 # Create WORKDIR
 RUN mkdir /app
-COPY files/index.php /app/index.php
+COPY index.php /app/index.php
 
 # Set WORKDIR
 WORKDIR /app
@@ -65,4 +66,4 @@ VOLUME ["/app"]
 EXPOSE 80
 
 # Entry point
-CMD ["/serve.sh"]
+CMD ["serve"]

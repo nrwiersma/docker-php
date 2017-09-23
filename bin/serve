@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+# Declare logs
+declare -a logs
+logs+=( "/tmp/php-fpm-error.log" "/tmp/php-fpm-www-error.log" )
+touch "${logs[@]}"
+chmod a+w "${logs[@]}"
+
+killAll()
+{
+  pkill -P $$
+}
+
+# Call function to kill all children on SIGCHLD from the first one
+trap killAll SIGCHLD
+trap killAll SIGTERM
+trap killAll SIGINT
+
+# Start log redirection
+tail -qF -n 0 "${logs[@]}" 1>&2 &
+
+# Start PHP-FPM
+/usr/sbin/php-fpm7 \
+	-d max_file_uploads=$PHP_MAX_FILE_UPLOADS \
+	-d upload_max_filesize=$PHP_MAX_UPLOAD \
+	-d post_max_size=$PHP_MAX_POST &
+
+# Start Nginx
+/usr/sbin/nginx -g "daemon off;" &
+
+# Now wait for them to finish
+wait
