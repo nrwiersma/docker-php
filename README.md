@@ -1,6 +1,7 @@
 ![Logo](http://svg.wiersma.co.za/github/project?lang=docker&title=php)
 
-A lightweight Docker container entangling php-fpm and nginx.
+[![Docker Build Statu](https://img.shields.io/docker/build/nrwiersma/php.svg)](https://hub.docker.com/r/nrwiersma/php/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nrwiersma/php.svg)](https://hub.docker.com/r/nrwiersma/php/)
 
 ## Configuration
 
