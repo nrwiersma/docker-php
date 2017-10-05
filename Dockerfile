@@ -13,26 +13,27 @@ ENV PHP_MAX_POST 50M
 RUN apk --no-cache add \
 		bash \
         ca-certificates \
-        git \
         curl \
-        unzip \
+        git \
         nginx \
+        unzip \
         php7 \
-        php7-fpm \
-        php7-xml \
-        php7-zip \
-        php7-xmlreader \
-        php7-zlib \
-        php7-opcache \
-        php7-mcrypt \
-        php7-openssl \
-        php7-curl \
-        php7-json \
-        php7-dom \
-        php7-phar \
-        php7-mbstring \
         php7-cgi \
-        php7-pcntl && \
+        php7-curl \
+        php7-dom \
+        php7-fpm \
+        php7-json \
+        php7-mcrypt \
+        php7-mbstring \
+        php7-opcache \
+        php7-openssl \
+        php7-pcntl \
+        php7-phar \
+        php7-session \
+        php7-xml \
+        php7-xmlreader \
+        php7-zip \
+        php7-zlib && \
     rm -rf \
         /var/cache/apk/* \
         /tmp/*
