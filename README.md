@@ -3,6 +3,10 @@
 [![Docker Build Statu](https://img.shields.io/docker/build/nrwiersma/php.svg)](https://hub.docker.com/r/nrwiersma/php/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/nrwiersma/php.svg)](https://hub.docker.com/r/nrwiersma/php/)
 
+## Base Image
+
+When using this as a base image, it is advised that you switch to user *nobody*.
+
 ## Configuration
 
 Configuration can be done with environment variables.

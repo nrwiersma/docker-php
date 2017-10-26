@@ -30,6 +30,7 @@ RUN apk --no-cache add \
         php7-pcntl \
         php7-phar \
         php7-session \
+        php7-tokenizer \
         php7-xml \
         php7-xmlreader \
         php7-zip \
@@ -39,8 +40,8 @@ RUN apk --no-cache add \
         /tmp/*
 
 # Configure php
-RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php7/php.ini
-RUN sed -i 's/memory_limit.*/memory_limit = "${PHP_MEMORY_LIMIT}"/' /etc/php7/php.ini
+RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php7/php.ini && \
+    sed -i 's/memory_limit.*/memory_limit = "${PHP_MEMORY_LIMIT}"/' /etc/php7/php.ini
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
@@ -50,8 +51,10 @@ COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY bin/serve /bin/serve
 
-RUN chmod a+x /bin/serve
-RUN mkdir -p /var/run/nginx
+RUN chmod a+x /bin/serve && \
+    mkdir -p /var/run/nginx /nginx/logs && \
+    chmod -R a+w /var/run/nginx && \
+    chmod -R a+w /nginx/logs
 
 # Create WORKDIR
 RUN mkdir /app
@@ -60,11 +63,8 @@ COPY index.php /app/index.php
 # Set WORKDIR
 WORKDIR /app
 
-# Expose volumes
-VOLUME ["/app"]
-
 # Expose ports
-EXPOSE 80
+EXPOSE 8080
 
 # Entry point
 CMD ["serve"]

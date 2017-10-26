@@ -28,7 +28,7 @@ tail -qF -n 0 "${logs[@]}" 1>&2 &
 	-d post_max_size=$PHP_MAX_POST &
 
 # Start Nginx
-/usr/sbin/nginx -g "daemon off;" &
+/usr/sbin/nginx -g "daemon off;" -p /nginx &
 
 # Now wait for them to finish
 wait
